@@ -2,7 +2,8 @@
 import React from 'react';
 import { Message } from '@/types/chat';
 import { format } from 'date-fns';
-import { Check, CheckCheck, AlertCircle, Clock } from 'lucide-react';
+import { Check, CheckCheck, AlertCircle, Clock, Paperclip } from 'lucide-react';
+import ChartDisplay from './ChartDisplay';
 
 interface MessageBubbleProps {
   message: Message;
@@ -16,7 +17,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
       case 'sending':
         return <Clock className="w-3 h-3 text-gray-400" />;
       case 'sent':
-        return <CheckCheck className="w-3 h-3 text-blue-500" />;
+        return <CheckCheck className="w-3 h-3 text-red-500" />;
       case 'error':
         return <AlertCircle className="w-3 h-3 text-red-500" />;
       default:
@@ -30,7 +31,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         {/* Avatar */}
         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
           isUser 
-            ? 'bg-gradient-to-r from-blue-500 to-purple-600' 
+            ? 'bg-gradient-to-r from-red-500 to-red-600' 
             : 'bg-gradient-to-r from-gray-400 to-gray-600'
         }`}>
           {isUser ? (
@@ -48,11 +49,26 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         <div className={`group relative ${isUser ? 'mr-2' : 'ml-2'}`}>
           <div className={`px-4 py-2 rounded-2xl max-w-full break-words shadow-sm ${
             isUser 
-              ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-br-sm' 
+              ? 'bg-gradient-to-r from-red-500 to-red-600 text-white rounded-br-sm' 
               : 'bg-white border border-gray-200 text-gray-900 rounded-bl-sm'
           }`}>
             <p className="text-sm leading-relaxed">{message.content}</p>
+            
+            {/* File attachment indicator */}
+            {message.attachedFile && (
+              <div className="mt-2 flex items-center space-x-2 text-xs opacity-80">
+                <Paperclip className="w-3 h-3" />
+                <span>{message.attachedFile.name}</span>
+              </div>
+            )}
           </div>
+          
+          {/* Chart display */}
+          {message.chartData && (
+            <div className="mt-3">
+              <ChartDisplay data={message.chartData} />
+            </div>
+          )}
           
           {/* Timestamp and status */}
           <div className={`flex items-center space-x-1 mt-1 ${

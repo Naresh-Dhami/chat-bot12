@@ -5,6 +5,12 @@ export interface Message {
   sender: 'user' | 'ai';
   timestamp: Date;
   status: 'sending' | 'sent' | 'error';
+  attachedFile?: {
+    name: string;
+    size: number;
+    type: string;
+  };
+  chartData?: ChartData;
 }
 
 export interface Conversation {
@@ -18,4 +24,15 @@ export interface Conversation {
 export interface ApiResponse {
   response: string;
   error?: string;
+  chartData?: ChartData;
+}
+
+export interface ChartData {
+  type: 'bar' | 'line' | 'pie';
+  data: Array<{
+    name: string;
+    value: number;
+    [key: string]: any;
+  }>;
+  title?: string;
 }
